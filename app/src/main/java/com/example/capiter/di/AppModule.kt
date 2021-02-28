@@ -41,9 +41,10 @@ class AppModule {
                 .build()
     }
 
+
     @Singleton
     class ViewModelFactory<T : ViewModel> @Inject constructor(private val viewModelProvider: Provider<T>) :
-            ViewModelProvider.Factory {
+        ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -1,17 +1,77 @@
 package com.example.capiter.ui.products
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import com.example.capiter.common.App
 import com.example.capiter.databinding.ActivityProductsBinding
+import com.example.capiter.di.AppModule.ViewModelFactory
+import javax.inject.Inject
 
 class ProductsActivity : AppCompatActivity() {
+    @Inject
+    lateinit var viewModeFactory: ViewModelFactory<ProductsViewModel>
+    private val viewModel: ProductsViewModel by viewModels()
+
     private lateinit var binding: ActivityProductsBinding
     private lateinit var adapter: ProductsAdapter
+
+    private var loadingMore = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        App.component.inject(this)
         binding = ActivityProductsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         adapter = ProductsAdapter()
         binding.rvProducts.adapter = adapter
+
+        binding.refreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+        }
+
+        viewModel.viewState.observe(this, {
+            when {
+                it.loading -> {
+                    binding.refreshLayout.isEnabled = false
+                    binding.pb.visibility = View.VISIBLE
+                    binding.tvError.visibility = View.GONE
+                    binding.rvProducts.visibility = View.GONE
+                }
+                it.loadingMore -> {
+                    binding.pbMore.visibility = View.VISIBLE
+                    binding.tvError.visibility = View.GONE
+                }
+                it.error != null -> {
+                    binding.pb.visibility = View.GONE
+                    binding.tvError.visibility = View.VISIBLE
+                    binding.rvProducts.visibility = View.GONE
+                }
+                else -> {
+                    loadingMore = false
+                    binding.refreshLayout.isEnabled = true
+                    binding.pb.visibility = View.GONE
+                    binding.pbMore.visibility = View.GONE
+                    binding.tvError.visibility = View.GONE
+                    binding.rvProducts.visibility = View.VISIBLE
+                    adapter.submitList(it.products)
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        })
+
+        binding.scrollView.viewTreeObserver.addOnScrollChangedListener {
+            try {
+                val diff =
+                    binding.rvProducts.bottom - (binding.scrollView.height + binding.scrollView.scrollY)
+                if (diff == 0 && binding.rvProducts.bottom != 0 && !loadingMore) {
+                    viewModel.getProducts()
+                    loadingMore = true
+                }
+            } catch (e: Exception) {
+            }
+        }
     }
 }

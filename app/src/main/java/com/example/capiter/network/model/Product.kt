@@ -1,4 +1,4 @@
-package com.example.capiter.models.remote
+package com.example.capiter.network.model
 
 import com.google.gson.annotations.SerializedName
 

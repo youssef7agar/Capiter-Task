@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.capiter.R
 import com.example.capiter.databinding.ItemProductBinding
-import com.example.capiter.models.remote.Product
+import com.example.capiter.network.model.Product
 
 class ProductsAdapter : ListAdapter<Product, ProductsAdapter.ViewHolder>(DiffCallBack()) {
 

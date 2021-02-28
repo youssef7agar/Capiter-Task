@@ -1,19 +1,11 @@
 package com.example.capiter.common
 
-import android.app.Application
-import com.example.capiter.di.AppComponent
 import com.example.capiter.di.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerApplication
 
-class App: Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        component = DaggerAppComponent.builder()
-                .build()
-    }
-
-    companion object {
-        @JvmStatic
-        lateinit var component: AppComponent
+class App : DaggerApplication() {
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerAppComponent.builder().application(this).build()
     }
 }

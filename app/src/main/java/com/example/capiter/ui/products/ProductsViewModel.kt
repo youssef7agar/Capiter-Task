@@ -1,8 +1,6 @@
 package com.example.capiter.ui.products
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.capiter.common.App
 import com.example.capiter.common.BaseViewModel
 import com.example.capiter.common.Constants
 import com.example.capiter.network.model.Product
@@ -15,17 +13,13 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-class ProductsViewModel @Inject constructor() : BaseViewModel<ProductsViewState>() {
+class ProductsViewModel @Inject constructor(private val repo: Repo) : BaseViewModel<ProductsViewState>() {
     private var page = AtomicInteger(Constants.PAGINATION_START)
     private val disposables = CompositeDisposable()
     override val _viewState = MutableLiveData<ProductsViewState>().apply { ProductsViewState() }
     private val productsList = mutableListOf<Product>()
 
-    @Inject
-    lateinit var repo: Repo
-
     init {
-        App.component.inject(this)
         getProducts()
     }
 

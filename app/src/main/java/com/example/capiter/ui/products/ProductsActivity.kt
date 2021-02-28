@@ -3,25 +3,23 @@ package com.example.capiter.ui.products
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.example.capiter.common.App
 import com.example.capiter.databinding.ActivityProductsBinding
-import com.example.capiter.di.AppModule.ViewModelFactory
+import com.example.capiter.di.ViewModelProviderFactory
+import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class ProductsActivity : AppCompatActivity() {
+class ProductsActivity : DaggerAppCompatActivity() {
+
     @Inject
-    lateinit var viewModeFactory: ViewModelFactory<ProductsViewModel>
-    private val viewModel: ProductsViewModel by viewModels()
+    lateinit var factory: ViewModelProviderFactory
+    private val viewModel: ProductsViewModel by viewModels { factory }
 
     private lateinit var binding: ActivityProductsBinding
     private lateinit var adapter: ProductsAdapter
-
     private var loadingMore = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.component.inject(this)
         binding = ActivityProductsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

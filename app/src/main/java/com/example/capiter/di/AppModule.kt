@@ -1,8 +1,8 @@
 package com.example.capiter.di
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.capiter.common.Constants
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -11,9 +11,8 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Provider
 import javax.inject.Singleton
+
 
 @Module
 class AppModule {
@@ -39,16 +38,5 @@ class AppModule {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(Constants.BASE_URL)
                 .build()
-    }
-
-
-    @Singleton
-    class ViewModelFactory<T : ViewModel> @Inject constructor(private val viewModelProvider: Provider<T>) :
-        ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return viewModelProvider.get() as T
-        }
     }
 }

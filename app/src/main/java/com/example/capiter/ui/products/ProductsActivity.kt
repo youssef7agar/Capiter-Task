@@ -31,23 +31,23 @@ class ProductsActivity : DaggerAppCompatActivity() {
             viewModel.refresh()
         }
 
-        viewModel.viewState.observe(this, {
+        viewModel.viewState.observe(this, { productsViewState ->
             when {
-                it.loading -> {
+                productsViewState.loading -> {
                     binding.refreshLayout.isEnabled = false
                     binding.pb.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
                     binding.rvProducts.visibility = View.GONE
                 }
-                it.loadingMore -> {
+                productsViewState.loadingMore -> {
                     binding.pbMore.visibility = View.VISIBLE
                     binding.tvError.visibility = View.GONE
                 }
-                it.error != null -> {
+                productsViewState.error != null -> {
                     binding.pb.visibility = View.GONE
                     binding.tvError.visibility = View.VISIBLE
                     binding.rvProducts.visibility = View.GONE
-                    Log.e("Products Activity", "onCreate: fetching data error", it.error)
+                    Log.e("Products Activity", "onCreate: fetching data error", productsViewState.error)
                 }
                 else -> {
                     loadingMore = false
@@ -56,7 +56,7 @@ class ProductsActivity : DaggerAppCompatActivity() {
                     binding.pbMore.visibility = View.GONE
                     binding.tvError.visibility = View.GONE
                     binding.rvProducts.visibility = View.VISIBLE
-                    adapter.submitList(it.products.toMutableList())
+                    adapter.submitList(productsViewState.products.toMutableList())
                 }
             }
         })

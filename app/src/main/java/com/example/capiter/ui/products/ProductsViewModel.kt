@@ -13,7 +13,8 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
-class ProductsViewModel @Inject constructor(private val repo: Repo) : BaseViewModel<ProductsViewState>() {
+class ProductsViewModel @Inject constructor(private val repo: Repo) :
+    BaseViewModel<ProductsViewState>() {
     private var page = AtomicInteger(Constants.PAGINATION_START)
     private val disposables = CompositeDisposable()
     override val _viewState = MutableLiveData<ProductsViewState>().apply { ProductsViewState() }
@@ -33,7 +34,7 @@ class ProductsViewModel @Inject constructor(private val repo: Repo) : BaseViewMo
             .subscribe(getProductsObserver())
     }
 
-    fun refresh(){
+    fun refresh() {
         page = AtomicInteger(Constants.PAGINATION_START)
         productsList.clear()
         getProducts()
@@ -55,6 +56,11 @@ class ProductsViewModel @Inject constructor(private val repo: Repo) : BaseViewMo
                 setState { copy(loading = false, loadingMore = false, error = Exception(e)) }
             }
         }
+    }
+
+    override fun onCleared() {
+        disposables.clear()
+        super.onCleared()
     }
 
     private fun setState(block: ProductsViewState.() -> ProductsViewState) {

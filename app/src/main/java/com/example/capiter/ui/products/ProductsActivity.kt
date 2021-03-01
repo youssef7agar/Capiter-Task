@@ -1,6 +1,7 @@
 package com.example.capiter.ui.products
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import com.example.capiter.databinding.ActivityProductsBinding
@@ -46,6 +47,7 @@ class ProductsActivity : DaggerAppCompatActivity() {
                     binding.pb.visibility = View.GONE
                     binding.tvError.visibility = View.VISIBLE
                     binding.rvProducts.visibility = View.GONE
+                    Log.e("Products Activity", "onCreate: fetching data error", it.error)
                 }
                 else -> {
                     loadingMore = false
@@ -54,8 +56,7 @@ class ProductsActivity : DaggerAppCompatActivity() {
                     binding.pbMore.visibility = View.GONE
                     binding.tvError.visibility = View.GONE
                     binding.rvProducts.visibility = View.VISIBLE
-                    adapter.submitList(it.products)
-                    adapter.notifyDataSetChanged()
+                    adapter.submitList(it.products.toMutableList())
                 }
             }
         })
@@ -69,6 +70,7 @@ class ProductsActivity : DaggerAppCompatActivity() {
                     loadingMore = true
                 }
             } catch (e: Exception) {
+                Log.e("Products Activity", "onCreate: pagination error", e)
             }
         }
     }

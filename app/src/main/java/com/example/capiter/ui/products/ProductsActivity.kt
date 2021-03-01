@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import com.example.capiter.R
 import com.example.capiter.databinding.ActivityProductsBinding
-import com.example.capiter.di.ViewModelProviderFactory
+import com.example.capiter.common.ViewModelProviderFactory
 import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject

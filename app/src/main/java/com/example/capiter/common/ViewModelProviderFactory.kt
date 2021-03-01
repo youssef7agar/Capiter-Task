@@ -1,4 +1,4 @@
-package com.example.capiter.di
+package com.example.capiter.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

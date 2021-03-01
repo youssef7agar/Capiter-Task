@@ -47,7 +47,7 @@
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:theme="@style/Title"
+            android:theme="@style/Price"
             android:layout_margin="@dimen/normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

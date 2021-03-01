@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import com.example.capiter.R
 import com.example.capiter.databinding.ActivityProductsBinding
 import com.example.capiter.di.ViewModelProviderFactory
+import com.google.android.material.snackbar.Snackbar
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -29,32 +31,36 @@ class ProductsActivity : DaggerAppCompatActivity() {
 
         binding.refreshLayout.setOnRefreshListener {
             viewModel.refresh()
+            binding.refreshLayout.isRefreshing = false
         }
 
         viewModel.viewState.observe(this, { productsViewState ->
             when {
                 productsViewState.loading -> {
-                    binding.refreshLayout.isEnabled = false
                     binding.pb.visibility = View.VISIBLE
-                    binding.tvError.visibility = View.GONE
                     binding.rvProducts.visibility = View.GONE
                 }
                 productsViewState.loadingMore -> {
                     binding.pbMore.visibility = View.VISIBLE
-                    binding.tvError.visibility = View.GONE
                 }
                 productsViewState.error != null -> {
                     binding.pb.visibility = View.GONE
-                    binding.tvError.visibility = View.VISIBLE
                     binding.rvProducts.visibility = View.GONE
-                    Log.e("Products Activity", "onCreate: fetching data error", productsViewState.error)
+                    Snackbar.make(
+                        binding.root,
+                        resources.getString(R.string.error_swipe_to_refresh),
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                    Log.e(
+                        "Products Activity",
+                        "onCreate: fetching data error",
+                        productsViewState.error
+                    )
                 }
                 else -> {
                     loadingMore = false
-                    binding.refreshLayout.isEnabled = true
                     binding.pb.visibility = View.GONE
                     binding.pbMore.visibility = View.GONE
-                    binding.tvError.visibility = View.GONE
                     binding.rvProducts.visibility = View.VISIBLE
                     adapter.submitList(productsViewState.products.toMutableList())
                 }

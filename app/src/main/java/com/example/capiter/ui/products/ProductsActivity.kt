@@ -31,20 +31,19 @@ class ProductsActivity : DaggerAppCompatActivity() {
 
         binding.refreshLayout.setOnRefreshListener {
             viewModel.refresh()
-            binding.refreshLayout.isRefreshing = false
         }
 
         viewModel.viewState.observe(this, { productsViewState ->
             when {
                 productsViewState.loading -> {
-                    binding.pb.visibility = View.VISIBLE
+                    binding.refreshLayout.isRefreshing = true
                     binding.rvProducts.visibility = View.GONE
                 }
                 productsViewState.loadingMore -> {
                     binding.pbMore.visibility = View.VISIBLE
                 }
                 productsViewState.error != null -> {
-                    binding.pb.visibility = View.GONE
+                    binding.refreshLayout.isRefreshing = false
                     binding.rvProducts.visibility = View.GONE
                     Snackbar.make(
                         binding.root,
@@ -59,7 +58,7 @@ class ProductsActivity : DaggerAppCompatActivity() {
                 }
                 else -> {
                     loadingMore = false
-                    binding.pb.visibility = View.GONE
+                    binding.refreshLayout.isRefreshing = false
                     binding.pbMore.visibility = View.GONE
                     binding.rvProducts.visibility = View.VISIBLE
                     adapter.submitList(productsViewState.products.toMutableList())

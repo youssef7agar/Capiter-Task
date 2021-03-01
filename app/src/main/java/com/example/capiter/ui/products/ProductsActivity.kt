@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBar
 import com.example.capiter.R
 import com.example.capiter.databinding.ActivityProductsBinding
 import com.example.capiter.di.ViewModelProviderFactory
@@ -25,6 +26,8 @@ class ProductsActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProductsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setCustomView(R.layout.action_bar_title_products_activity)
 
         adapter = ProductsAdapter()
         binding.rvProducts.adapter = adapter

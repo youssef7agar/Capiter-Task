@@ -7,5 +7,10 @@ data class ProductsViewState(
         val loading: Boolean = false,
         val loadingMore: Boolean = false,
         val error: Exception? = null,
-        val products: List<Product> = listOf()
-)
+        val products: MutableList<Product> = mutableListOf()
+) {
+    fun addProducts(list: List<Product>): ProductsViewState {
+        products.addAll(list)
+        return ProductsViewState(products = products)
+    }
+}

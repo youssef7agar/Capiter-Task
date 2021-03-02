@@ -18,7 +18,6 @@ class ProductsViewModel @Inject constructor(private val repo: Repo) :
     private var page = AtomicInteger(Constants.PAGINATION_START)
     private val disposables = CompositeDisposable()
     override val _viewState = MutableLiveData<ProductsViewState>().apply { ProductsViewState() }
-    private val productsList = mutableListOf<Product>()
 
     init {
         getProducts()
@@ -36,7 +35,6 @@ class ProductsViewModel @Inject constructor(private val repo: Repo) :
 
     fun refresh() {
         page = AtomicInteger(Constants.PAGINATION_START)
-        productsList.clear()
         getProducts()
     }
 
@@ -48,8 +46,7 @@ class ProductsViewModel @Inject constructor(private val repo: Repo) :
 
             override fun onSuccess(products: List<Product>) {
                 page.incrementAndGet()
-                productsList.addAll(products)
-                setState { copy(loading = false, loadingMore = false, products = productsList) }
+                setState { addProducts(products) }
             }
 
             override fun onError(e: Throwable) {
